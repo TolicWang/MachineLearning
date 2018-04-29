@@ -1,8 +1,9 @@
  %function score =  run(belta)   % turn on, if find beta
 
 temp = load('4k2_far.txt');
-load('noise.mat');
-X = [temp(:,2:end),noise];
+%load('noise.mat');
+%X = [temp(:,2:end),noise];
+X = [temp(:,2:end)];
 label = temp(:,1);
 [m,n] = size(X);
 K = 4;
@@ -33,8 +34,8 @@ end
 score = NMI(idx,label);
 
 
-idx1 = kmeans(X,K);
-score1 = NMI(idx1,label);
+%idx1 = kmeans(X,K);
+%score1 = NMI(idx1,label);
 
 
 

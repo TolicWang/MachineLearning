@@ -1,7 +1,13 @@
 
-[X,y] = PreProcessing;% preProcessing data
-[lambda,K,gamma] = InitParameter(X);
+temp = load('./DataSet/wine.txt');
+y = temp(:,1);
+X = temp(:,2:end);
 [m,n] = size(X);
+gamma = 1;% initialize parameter gamma
+K = 3;   
+lambda = zeros(K,n)+1/n;% initialize all weights to 1/n
+
+
 iterations = 25;
 centroids = InitCentroids(X,K);
 for i = 1:iterations

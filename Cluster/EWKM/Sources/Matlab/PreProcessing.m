@@ -1,5 +1,5 @@
 function [ X,y] = PreProcessing
-temp = load('DataSet\leuk72_3k.txt');
+temp = load('./DataSet/wine.txt');
 
  
   y = temp(:,1);

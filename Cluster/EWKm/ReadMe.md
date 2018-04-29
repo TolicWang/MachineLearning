@@ -1,1 +1,0 @@
-As the reason of time-expensive, this algorithm now can not be used to high-demension sparse dataset. But the algorithm principle of this paper is fine, you just change the code using python with Scipy library.
