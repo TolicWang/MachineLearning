@@ -77,6 +77,7 @@ def train():
         c,df_w1, df_w2, df_b1, df_b2=costFandGradient(batch_X, batch_y, W1, b1, W2, b2, lambd)
         cost.append(round(c,4))
         W1, b1, W2, b2=gradientDescent(learn_rate,W1,b1,W2,b2,df_w1,df_w2,df_b1,df_b2)
+
     p={'W1':W1,'b1':b1,'W2':W2,'b2':b2}
     temp=open('data','wb')
     pickle.dump(p,temp)
@@ -94,6 +95,7 @@ def prediction():
     W2 = data['W2']
     b1 = data['b1']
     b2 = data['b2']
+
     a1 = X.T  # 400 by 5000
     z2 = np.dot(W1, a1) + b1  # 25 by 400 * 400 by 5000 + 25 by 1= 25 by 5000
     a2 = sigmoid(z2)  # 25 by 5000
