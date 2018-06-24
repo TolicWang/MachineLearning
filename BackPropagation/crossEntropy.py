@@ -24,7 +24,6 @@ def costFandGradient(X,y_label,W1,b1,W2,b2,lambd):
     # print(cost)
     #===========   back propogation
 
-    # delta3=(a3-y_label)*sigmoidGradient(z3)# 10 by 5000
     delta3=(a3-y_label)
     df_w2=np.dot(delta3,a2.T)# 10 by 5000 dot 5000 by 25 = 10 by 25
     df_w2=(1/m)*df_w2+(lambd/m)*W2
@@ -33,7 +32,6 @@ def costFandGradient(X,y_label,W1,b1,W2,b2,lambd):
     df_w1=np.dot(delta2,a1.T)# 25 by 5000 dot 5000 by 400 = 25 by 400
     df_w1=(1/m)*df_w1+(lambd/m)*W1
 
-    # print(np.sum(delta2,axis=1).reshape(b1.shape))
     df_b1=(1/m)*np.sum(delta2,axis=1).reshape(b1.shape)#
     df_b2=(1/m)*np.sum(delta3,axis=1).reshape(b2.shape)
     return cost,df_w1,df_w2,df_b1,df_b2

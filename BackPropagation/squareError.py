@@ -15,10 +15,8 @@ def costFandGradient(X,y_label,W1,b1,W2,b2,lambd):
     #============    forward propogation
     m, n = np.shape(X)  # m:samples, n: dimensions
     a1 = X.T  # 400 by 5000
-
     z2 = np.dot(W1, a1) + b1  # 25 by 400 dot 400 by 5000 + 25 by 1= 25 by 5000
     a2 = sigmoid(z2)  # 25 by 5000
-
     z3 = np.dot(W2, a2) + b2  # 10 by 25 dot 25 by 5000 + 10 by 1= 10 by 5000
     a3 = sigmoid(z3)  # 10 by 5000
 
