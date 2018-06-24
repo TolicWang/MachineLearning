@@ -109,12 +109,6 @@ def prediction():
         y_pre[i] = index
     print(accuracy_score(y,y_pre))
 
-
-# x=np.linspace(1,20,20).reshape((4,5))
-# y=x.reshape(20,order='c')
-# print(y[10:20].reshape((2,5),order='c'))
-# print(y.reshape((5,4),order='c'))
-# print(y.reshape((5,4),order='f'))
 if __name__ == '__main__':
     train()
     prediction()
