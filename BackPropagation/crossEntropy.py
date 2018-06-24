@@ -64,10 +64,6 @@ def train():
     b1=np.random.rand(hidden_layer_size,1)*2*epsilong_init-epsilong_init
     b2=np.random.rand(output_layer_size,1)*2*epsilong_init-epsilong_init
 
-    # W1=np.random.rand(input_layer_size*hidden_layer_size).reshape((hidden_layer_size,input_layer_size))
-    # W2=np.random.rand(hidden_layer_size*output_layer_size).reshape((output_layer_size,hidden_layer_size))
-    # b1=np.random.rand(hidden_layer_size).reshape((hidden_layer_size,1))
-    # b2=np.random.rand(output_layer_size).reshape((output_layer_size,1))
     lambd = 3.0
     iteration=200
     cost=[]
@@ -111,11 +107,6 @@ def prediction():
         y_pre[i] = index
     print(accuracy_score(y,y_pre))
 
-# x=np.linspace(1,20,20).reshape((4,5))
-# y=x.reshape(20,order='c')
-# print(y[10:20].reshape((2,5),order='c'))
-# print(y.reshape((5,4),order='c'))
-# print(y.reshape((5,4),order='f'))
 
 if __name__ == '__main__':
     train()
