@@ -41,7 +41,7 @@ class Metrics():
         precision = cp / (ci.reshape(len(ci), 1) * np.ones((1, p_size), dtype=float))
         recall = cp / (np.ones((c_size, 1), dtype=float) * pj.reshape(1, len(pj)))
 
-        F = 2 * precision * recall / (precision + recall)
+        F = (2 * precision * recall) / (precision + recall)
 
         F = np.nan_to_num(F)
 

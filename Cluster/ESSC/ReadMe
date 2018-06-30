@@ -19,10 +19,10 @@ NOTE 3:
 '''
 
 # count = 1
-# while not essc.isConverge:
-#     y1_pre = essc.fit_predict(X)
+# while not ewk.isConverge:
+#     y1_pre = ewk.fit_predict(X)
 #     print('Runing times:',count)
 #     count+=1
-# print('Result of ESSC:', Metrics(y, y1_pre).getFscAccNmiAri())
+# print('Result of EWk:', Metrics(y, y1_pre).getFscAccNmiAri())
 
 
