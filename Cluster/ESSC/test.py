@@ -1,13 +1,18 @@
 # -*- coding: utf-8 -*-
 # Author: wangchengo@126.com
-from eWkmeans import EWKmeans
+from essc import ESSC
 from metrics import Metrics
-from sklearn.datasets import load_iris
+from sklearn.datasets import load_wine
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import StandardScaler
 import numpy as np
-from DataSet.preProcessing import load_DataSets
-
-
+data=load_wine()
+X_train=data.data
+y_train=data.target
+X=X_train
+y=y_train
+ss=StandardScaler()
+X=ss.fit_transform(X)
 '''
 NOTE 1:
 本算法是仿造sklearn中的设计模式实现的，用法示例如下（test.py)
@@ -27,23 +32,20 @@ NOTE 3:
 (2).getFscAccNmiAri() 依次返回的是Fsc,Acc,NMI,ARI
 '''
 
-X,y,K=load_DataSets('Astrilian_0',isScaler=True)
-ewk=EWKmeans(n_cluster=3,gamma=10.0)
-
-y1_pre=ewk.fit_predict(X)
-if ewk.isConverge:
-    print('Result of WKmeans:', Metrics(y, y1_pre).getFscAccNmiAri())
+essc=ESSC(n_clusters=3,max_iter=20,gamma=40.0,eta=0.03)
+y1_pre = essc.fit_predict(X)
+if essc.isConverge:
+    print('Result of ESSC:', Metrics(y, y1_pre).getFscAccNmiAri())
 else:
     print(y1_pre)
-#
+
+
+
 # count = 1
-# while not ewk.isConverge:
-#     y1_pre = ewk.fit_predict(X)
+# while not essc.isConverge:
+#     y1_pre = essc.fit_predict(X)
 #     print('Runing times:',count)
 #     count+=1
-# print('Result of EWk:', Metrics(y, y1_pre).getFscAccNmiAri())
-
-
-
+# print('Result of ESSC:', Metrics(y, y1_pre).getFscAccNmiAri())
 
 
