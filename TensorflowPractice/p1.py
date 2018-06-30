@@ -14,3 +14,5 @@ print(sess.run(D))
 
 print(sess.run(tf.nn.relu([-3,3,10])))
 print(sess.run(tf.nn.relu6([-3,3,10])))
+
+sess.close()
