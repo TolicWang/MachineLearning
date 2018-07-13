@@ -1,0 +1,2 @@
+import jieba
+text=['']

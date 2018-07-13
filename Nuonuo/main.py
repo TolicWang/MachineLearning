@@ -5,8 +5,12 @@ import jieba
 from collections import Counter
 from sklearn.feature_extraction.text import TfidfVectorizer
 import pickle
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import datetime
 
-def Load_Original_Traindata_Testdata_Cut():
+def Load_Original_Traindata_Testdata_Cut(dimensions):
     word_string=''
     train_cut_words=[]
     for line in open('./data/train_text.txt',encoding='utf-8'):
@@ -32,7 +36,7 @@ def Load_Original_Traindata_Testdata_Cut():
         if len(x)>1 and x != '\r\n':
             c[x] += 1
     most_common_words=[]
-    for (k,v) in c.most_common(10):
+    for (k,v) in c.most_common(dimensions):
         most_common_words.append(k)
     stop_words = [item for item in all_words if item not in most_common_words]
 
@@ -63,7 +67,22 @@ def Load_Traindata_Testdata_with_Tfidf():
     y_test = data['y_test']
     return x_train,x_test,y_train,y_test
 
+def train():
+    x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
+    X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.3)
+    forest = RandomForestClassifier(n_jobs=-1, n_estimators=100)
+    now = datetime.datetime.now()
+    print("start time:", now)
+    forest.fit(X_train, Y_train)
+    y_pre = forest.predict(X_val)
+    print(forest.score(X_val, Y_val))
+    print(accuracy_score(Y_val, y_pre))
+    training_time = datetime.datetime.now() - now
+    print("Training time(s):", training_time)
 
-# train_cut_words,test_cut_words,stop_words=Load_Original_Traindata_Testdata_Cut()
-# Tf_Idf_Save(train_cut_words,test_cut_words,stop_words)
-x_train,x_test,y_train,y_test=Load_Traindata_Testdata_with_Tfidf()
+
+
+train_cut_words,test_cut_words,stop_words=Load_Original_Traindata_Testdata_Cut(dimensions=15000)
+Tf_Idf_Save(train_cut_words,test_cut_words,stop_words)
+train()
+
