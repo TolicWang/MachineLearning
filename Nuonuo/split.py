@@ -8,12 +8,7 @@ import jieba
 #     line=line.replace('_label_',',')
 #     f.write(line)
 
-testData = pd.read_csv('./test_text.csv', names=['data', 'label'])
-test_datas = np.array(testData['data'])
-test_label = np.array(testData['label'])
 
-test_cut_words=[]
-for line in test_datas:
-    line = re.sub("[\_\-\\\/\#\( \（ \）\!\%\[\]\、\,\。]", "", line)
-    seg_list = jieba.cut(line, cut_all=False)
-    test_cut_words.append(" ".join(seg_list))
+
+    f.write(line)
+    f.write(line)
