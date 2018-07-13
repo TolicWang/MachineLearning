@@ -23,10 +23,6 @@ def Load_Original_Traindata_Testdata_Cut(dimensions):
     train_cut_words=[]
     line_num=0
     for line in open('./data/train_text.txt',encoding='utf-8'):
-        # if y_train[line_num] in class_label:
-        #     line_num+=1
-        #     continue
-        # line_num+=1
         line = line.strip('\n')
         # line = re.sub("[A-Za-z0-9\!\%\[\]\,\。]", "", line)
         line = re.sub("[\(\)\!\%\[\]\,\。]", "", line)
