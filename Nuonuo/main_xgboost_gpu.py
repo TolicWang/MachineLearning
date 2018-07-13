@@ -9,8 +9,8 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import datetime
-from xgboost import XGBClassifier
-from sklearn.linear_model import SGDClassifier
+
+
 
 def Load_Original_Traindata_Testdata_Cut(dimensions):
     word_string=''
@@ -72,32 +72,20 @@ def Load_Traindata_Testdata_with_Tfidf():
 
 def train():
     x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
-    # X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.3)
-    # model = RandomForestClassifier(n_jobs=-1, n_estimators=100)
-    # model=XGBClassifier()
-    model= SGDClassifier()
+    X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.3)
+    forest = RandomForestClassifier(n_jobs=-1, n_estimators=100)
     now = datetime.datetime.now()
     print("Training begin:", now)
-    batch_size=50000
-    for i in range(100):
-        start=(i*batch_size)%len(y_train)
-        end=min(start+batch_size,len(y_train))
-        model.partial_fit(x_train[start:end],y_train[start:end],classes=y_train)
-        y_pre=model.predict(x_test)
-        acc=accuracy_score(y_test,y_pre)
-        score=model.score(x_test,y_test)
-        print("%d times,  %f score,  %f acc"%(i,score,acc))
-    # model.fit(X_train, Y_train)
-    # y_pre = model.predict(X_val)
-    # print(model.score(X_val, Y_val))
-    # print(accuracy_score(Y_val, y_pre))
+    forest.fit(X_train, Y_train)
+    y_pre = forest.predict(X_val)
+    print(forest.score(X_val, Y_val))
+    print(accuracy_score(Y_val, y_pre))
     training_time = datetime.datetime.now() - now
     print("Training time(s):", training_time)
 
 
 
-# train_cut_words,test_cut_words,stop_words=Load_Original_Traindata_Testdata_Cut(dimensions=15000)
-# Tf_Idf_Save(train_cut_words,test_cut_words,stop_words)
+train_cut_words,test_cut_words,stop_words=Load_Original_Traindata_Testdata_Cut(dimensions=15000)
+Tf_Idf_Save(train_cut_words,test_cut_words,stop_words)
 train()
-# x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
 
