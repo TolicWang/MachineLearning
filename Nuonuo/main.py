@@ -39,7 +39,7 @@ def Load_Original_Traindata_Testdata_Cut(dimensions):
     for (k,v) in c.most_common(dimensions):
         most_common_words.append(k)
     stop_words = [item for item in all_words if item not in most_common_words]
-
+    print('Words cut succesfully!')
     return train_cut_words,test_cut_words,stop_words
 
 def Tf_Idf_Save(train_cut_words,test_cut_words,stop_words):
@@ -57,7 +57,7 @@ def Tf_Idf_Save(train_cut_words,test_cut_words,stop_words):
     p={'x_train':x_train,'y_train':y_train,'x_test':x_test,'y_test':y_test}
     temp=open('./data/train_and_test_data','wb')
     pickle.dump(p,temp)
-
+    print('Tf-Idf and Save succesfully!')
 def Load_Traindata_Testdata_with_Tfidf():
     p = open('./data/train_and_test_data', 'rb')
     data = pickle.load(p)
@@ -65,6 +65,7 @@ def Load_Traindata_Testdata_with_Tfidf():
     y_train = data['y_train']
     x_test = data['x_test']
     y_test = data['y_test']
+    print('Load training data succesfully!')
     return x_train,x_test,y_train,y_test
 
 def train():
@@ -72,7 +73,7 @@ def train():
     X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.3)
     forest = RandomForestClassifier(n_jobs=-1, n_estimators=100)
     now = datetime.datetime.now()
-    print("start time:", now)
+    print("Training begin:", now)
     forest.fit(X_train, Y_train)
     y_pre = forest.predict(X_val)
     print(forest.score(X_val, Y_val))
