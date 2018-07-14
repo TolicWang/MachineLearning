@@ -75,7 +75,7 @@ def train_and_test():
     print(test_data)
     # batch_x,batch_y=get_batch(X_train,train_labels,5000)
     #
-    # params={'max_depth':list(range(2,7)),'n_estimators':list(range(10,2000,100))}
+    # params={'max_depth':list(range(2,7)),'n_estimators':list(range(10,500,10))}
     # forest=RandomForestClassifier()
     # gs=GridSearchCV(forest,params,n_jobs=-1,cv=5,verbose=1)
     # gs.fit(batch_x,batch_y)

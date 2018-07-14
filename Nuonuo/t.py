@@ -3,7 +3,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 X_test = ['没有 你 的 地方 都是 他乡','没有 你 的 旅行 都是 流浪']
 
-stopword = ['都是','他乡'] #自定义一个停用词表，如果不指定停用词表，
+stopword = ['都是','都是'] #自定义一个停用词表，如果不指定停用词表，
 # 则默认将所有单个汉字视为停用词；但可以设token_pattern=r"(?u)\b\w+\b"，即不考虑停用词
 
 tfidf=TfidfVectorizer(token_pattern=r"(?u)\b\w\w+\b",stop_words=stopword)

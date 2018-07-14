@@ -35,7 +35,7 @@ def Load_Original_Traindata_Testdata_Cut_and_Save():
         temp=" ".join(seg_list)
         f.write(temp+'\n')
     f.close()
-    print('Train and Test words Cut and Save succesfully!')
+    print('\nTrain and Test words Cut and Save succesfully!')
 def Make_Stop_Words_and_Save(dimensions):
     all_candidate_stop_words = ""
     for line in open('./data/train_cut_words.txt', encoding='utf-8'):
@@ -61,7 +61,7 @@ def Load_Stop_Words():
     p=open('./data/stop_words','rb')
     data=pickle.load(p)
     stop_words=data['stop_words']
-    print('Load stop words succesfully!')
+    print('\nLoad stop words succesfully!')
     return stop_words
 def Make_Train_and_Test_Tf_Idf_and_Save():
     train_cut_words=[]
@@ -87,16 +87,16 @@ def Make_Train_and_Test_Tf_Idf_and_Save():
     p={'x_train':x_train,'y_train':y_train,'x_test':x_test,'y_test':y_test}
     temp=open('./data/train_and_test_data','wb')
     pickle.dump(p,temp)
-    print('Make Train and Test Tf-Idf with dimension:',x_train.shape[1]
+    print('\nMake Train and Test Tf-Idf with dimension:',x_train.shape[1]
           ,' and Save succesfully!')
 def Load_Traindata_Testdata_with_Tfidf():
-    p = open('./data/train_and_test_data_20000', 'rb')
+    p = open('./data/train_and_test_data', 'rb')
     data = pickle.load(p)
     x_train = data['x_train']
     y_train = data['y_train']
     x_test = data['x_test']
     y_test = data['y_test']
-    print('Load training data succesfully! shape:',x_train.shape)
+    print('\nLoad training data succesfully! shape:',x_train.shape)
     return x_train,x_test,y_train,y_test
 def train_by_partial_SGB():
     x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
@@ -127,7 +127,7 @@ def train_by_RandForest():
     x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
     model = RandomForestClassifier()
     now = datetime.datetime.now()
-    print("Training begin:", now)
+    print("\nTraining begin by RandForest:", now)
 
     # params = {'max_depth': list(range(2, 7)), 'n_estimators': list(range(10, 300, 10))}
     # gs = GridSearchCV(model, params, n_jobs=-1, cv=3, verbose=1)
@@ -144,7 +144,7 @@ def train_by_RandForest():
     print("Training time(s):", training_time)
 
 # Load_Original_Traindata_Testdata_Cut_and_Save()
-# Make_Stop_Words_and_Save(dimensions=10000)
+# Make_Stop_Words_and_Save(dimensions=50000)
 # Make_Train_and_Test_Tf_Idf_and_Save()
-# train_by_RandForest()
+train_by_RandForest()
 

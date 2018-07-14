@@ -9,7 +9,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import datetime
-
+import xgboost as xgb
 
 
 def Load_Original_Traindata_Testdata_Cut(dimensions):
@@ -73,19 +73,31 @@ def Load_Traindata_Testdata_with_Tfidf():
 def train():
     x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
     X_train, X_val, Y_train, Y_val = train_test_split(x_train, y_train, test_size=0.3)
-    forest = RandomForestClassifier(n_jobs=-1, n_estimators=100)
+    # Specify sufficient boosting iterations to reach a minimum
+    num_round = 10
+
+    # Leave most parameters as default
+    param = {'objective': 'multi:softmax',  # Specify multiclass classification
+             'num_class': 1000,  # Number of possible output classes
+             'tree_method': 'gpu_hist'  # Use GPU accelerated algorithm
+             }
+
+    # Convert input data from numpy to XGBoost format
+    dtrain = xgb.DMatrix(X_train, label=Y_train)
+    dtest = xgb.DMatrix(X_val, label=Y_val)
+
+    gpu_res = {}  # Store accuracy result
+    # Train model
     now = datetime.datetime.now()
-    print("Training begin:", now)
-    forest.fit(X_train, Y_train)
-    y_pre = forest.predict(X_val)
-    print(forest.score(X_val, Y_val))
-    print(accuracy_score(Y_val, y_pre))
+    print('Training begin:',now)
+
+    xgb.train(param, dtrain, num_round, evals=[(dtest, 'test')], evals_result=gpu_res)
+
     training_time = datetime.datetime.now() - now
     print("Training time(s):", training_time)
 
 
 
-train_cut_words,test_cut_words,stop_words=Load_Original_Traindata_Testdata_Cut(dimensions=15000)
-Tf_Idf_Save(train_cut_words,test_cut_words,stop_words)
+# train_cut_words,test_cut_words,stop_words=Load_Original_Traindata_Testdata_Cut(dimensions=15000)
+# Tf_Idf_Save(train_cut_words,test_cut_words,stop_words)
 train()
-
