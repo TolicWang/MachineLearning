@@ -11,12 +11,28 @@ from sklearn.metrics import accuracy_score
 import datetime
 from xgboost import XGBClassifier
 from sklearn.grid_search import GridSearchCV
-
 from sklearn.linear_model import SGDClassifier
 
 def Load_Original_Traindata_Testdata_Cut_and_Save():
+    now=datetime.datetime.now()
+    print("Train and Test words Cut begin: ",now)
+
+    train_label_data = pd.read_csv('./data/train_label.txt', names=['c1'])
+    y_train = np.array(train_label_data['c1'])
+    y_count = np.bincount(y_train)
+    less_than_label = np.where(y_count < 5)[0]
+    # remove samples which appear in a class less than 5 times
+    line_number = 0
+    count=0
     f=open('./data/train_cut_words.txt','w',encoding='utf-8')
+    p=open('./data/train_label_remove_less_than.txt','w',encoding='utf-8')
     for line in open('./data/train_text.txt',encoding='utf-8'):
+        if y_train[line_number] in less_than_label:
+            line_number += 1
+            continue
+        p.write(str(y_train[line_number])+'\n')
+        line_number += 1
+        count+=1
         line = line.strip('\n')
         # line = re.sub("[A-Za-z0-9\!\%\[\]\,\。]", "", line)
         line = re.sub("[\_\-\\\/\#\(\) \（ \）\!\%\[\]\、\,\。\*\+\【\】]", "", line)
@@ -24,8 +40,9 @@ def Load_Original_Traindata_Testdata_Cut_and_Save():
         seg_list=jieba.cut(line,cut_all=False)
         temp=" ".join(seg_list)
         f.write(temp+'\n')
-    f.close()
 
+    f.close()
+    p.close()
     test_data = pd.read_csv('./data/test_text.csv', names=['data', 'label'])
     test_datas = np.array(test_data['data'])
     f=open('./data/test_cut_words.txt','w',encoding='utf-8')
@@ -35,8 +52,11 @@ def Load_Original_Traindata_Testdata_Cut_and_Save():
         temp=" ".join(seg_list)
         f.write(temp+'\n')
     f.close()
-    print('\nTrain and Test words Cut and Save succesfully!')
+    last=datetime.datetime.now()
+    print('Train and Test words Cut and Save succesfully!',last-now," time(s)")
 def Make_Stop_Words_and_Save(dimensions):
+    now=datetime.datetime.now()
+    print("Make stop words begin: ",now)
     all_candidate_stop_words = ""
     for line in open('./data/train_cut_words.txt', encoding='utf-8'):
         line = line.strip('\n')+" "
@@ -56,14 +76,17 @@ def Make_Stop_Words_and_Save(dimensions):
     p={'stop_words':stop_words}
     temp=open('./data/stop_words','wb')
     pickle.dump(p,temp)
-    print('Make stop words and Save succesfully!')
+    last=datetime.datetime.now()
+    print('Make stop words and Save succesfully! ',last-now,' time(s)')
 def Load_Stop_Words():
     p=open('./data/stop_words','rb')
     data=pickle.load(p)
     stop_words=data['stop_words']
-    print('\nLoad stop words succesfully!')
+    print('Load stop words succesfully!')
     return stop_words
 def Make_Train_and_Test_Tf_Idf_and_Save():
+    now = datetime.datetime.now()
+    print("Make Train and Test Tf-Idf begin: ", now)
     train_cut_words=[]
     for line in open('./data/train_cut_words.txt', encoding='utf-8'):
         line=line.strip('\n')
@@ -72,12 +95,13 @@ def Make_Train_and_Test_Tf_Idf_and_Save():
     for line in open('./data/test_cut_words.txt', encoding='utf-8'):
         line=line.strip('\n')
         test_cut_words.append(line)
+
     stop_words=Load_Stop_Words()
     tfidf=TfidfVectorizer(token_pattern=r"(?u)\b\w\w+\b",stop_words=stop_words)
     x_train=tfidf.fit_transform(train_cut_words)
     x_test=tfidf.transform(test_cut_words)
     # dict_list=tfidf.get_feature_names()
-    train_label_data=pd.read_csv('./data/train_label.txt',names=['c1'])
+    train_label_data=pd.read_csv('./data/train_label_remove_less_than.txt',names=['c1'])
     y_train=np.array(train_label_data['c1'])
     test_data = pd.read_csv('./data/test_text.csv', names=['data', 'label'])
     y_test = np.array(test_data['label'])
@@ -87,8 +111,9 @@ def Make_Train_and_Test_Tf_Idf_and_Save():
     p={'x_train':x_train,'y_train':y_train,'x_test':x_test,'y_test':y_test}
     temp=open('./data/train_and_test_data','wb')
     pickle.dump(p,temp)
-    print('\nMake Train and Test Tf-Idf with dimension:',x_train.shape[1]
-          ,' and Save succesfully!')
+    last=datetime.datetime.now()
+    print('Make Train and Test Tf-Idf with dimension:',x_train.shape[1]
+          ,' and Save succesfully!',last-now,' time(s)')
 def Load_Traindata_Testdata_with_Tfidf():
     p = open('./data/train_and_test_data', 'rb')
     data = pickle.load(p)
@@ -96,7 +121,7 @@ def Load_Traindata_Testdata_with_Tfidf():
     y_train = data['y_train']
     x_test = data['x_test']
     y_test = data['y_test']
-    print('\nLoad training data succesfully! shape:',x_train.shape)
+    print('Load training data succesfully! shape:',x_train.shape)
     return x_train,x_test,y_train,y_test
 def train_by_partial_SGB():
     x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
@@ -127,7 +152,7 @@ def train_by_RandForest():
     x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf()
     model = RandomForestClassifier()
     now = datetime.datetime.now()
-    print("\nTraining begin by RandForest:", now)
+    print("Training begin by RandForest:", now)
 
     # params = {'max_depth': list(range(2, 7)), 'n_estimators': list(range(10, 300, 10))}
     # gs = GridSearchCV(model, params, n_jobs=-1, cv=3, verbose=1)
@@ -143,8 +168,8 @@ def train_by_RandForest():
     training_time = datetime.datetime.now() - now
     print("Training time(s):", training_time)
 
-# Load_Original_Traindata_Testdata_Cut_and_Save()
-# Make_Stop_Words_and_Save(dimensions=50000)
+Load_Original_Traindata_Testdata_Cut_and_Save()
+# Make_Stop_Words_and_Save(dimensions=30000)
 # Make_Train_and_Test_Tf_Idf_and_Save()
-train_by_RandForest()
-
+# train_by_RandForest()
+                                                                                        
