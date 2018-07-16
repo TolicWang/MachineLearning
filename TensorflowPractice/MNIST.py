@@ -1,6 +1,6 @@
 import tensorflow as tf
 from tensorflow.examples.tutorials.mnist import input_data
-mnist=input_data.read_data_sets("/home/tolic/dataSet/MNIST_data",one_hot=True)
+
 INPUT_NODE=784
 OUTPUT_NODE=10
 LAER1_NODE=500
@@ -8,7 +8,7 @@ BATCH_SIZE=100
 LEARNING_RATE_BASE=0.8
 LEARNING_RATE_DECAY=0.99
 REGULARIZATION_RATE=0.0001
-TRAINING_STEPS=300
+TRAINING_STEPS=3000
 
 def inference(input_tensor,weights1,biases1,weights2,biases2):
     layer1=tf.nn.relu(tf.matmul(input_tensor,weights1)+biases1)
@@ -49,12 +49,15 @@ def train(mnist):
                 validate_acc,l=sess.run([accuracy,loss],feed_dict=validate_feed)
                 print('After %d training step(s), validation accuracy is'
                       ' %g, loss is %s'%(i,validate_acc,l))
+                print('global_step',sess.run(global_step))
         test_acc=sess.run(accuracy,feed_dict=test_feed)
         print('After %d training step(s), test accuracy is %g'%(TRAINING_STEPS,test_acc))
         saver.save(sess,'./model.ckpt')
 
-if __name__ == '__main__':
+def main(argv =None):
+    mnist = input_data.read_data_sets("/home/tolic/dataSet/MNIST_data",
+                                      one_hot=True)
     train(mnist)
-
-
+if __name__ == '__main__':
+    tf.app.run()
 
