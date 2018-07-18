@@ -28,6 +28,7 @@ def Compute_Center_Each_Class(x_train,y_train,batch_size):
         if end >= x_train.shape[0]:
             end = x_train.shape[0]
         batch_x = x_train[begin:end].toarray()
+        # batch_x = x_train[begin:end]
         batch_y = y_train[begin:end]
         batch_classes = np.unique(batch_y)
         for i in batch_classes:
@@ -39,27 +40,35 @@ def Compute_Center_Each_Class(x_train,y_train,batch_size):
     print("Compute center of each class finished!: ",last-now)
     return class_center/c
 
-def cos_simi(v1,v2):
-    v1_dot_v2 = np.dot(v1,v2)
-    v1_nor = np.sqrt(np.sum(np.power(v1,2)))
-    v2_nor = np.sqrt(np.sum(np.power(v2,2)))
-    return v1_dot_v2/(v1_nor*v2_nor)
-
-
-def Prediction(class_center,x_test):
+def cos_simi(class_centers,v):
+    n_centers = class_centers.shape[0]
+    y_most = np.zeros(n_centers,dtype=np.float32)
+    v2 = np.nan_to_num(v)
+    for i in range(n_centers):
+        v1 = class_centers[i]
+        v1_dot_v2 = np.dot(v1,v2)
+        v1_nor = np.sqrt(np.sum(v1*v1))
+        v2_nor = np.sqrt(np.sum(v2*v2))
+        y_most[i] = np.nan_to_num(v1_dot_v2/(v1_nor*v2_nor))
+    # print(y_most)
+    return np.argmax(y_most)
+def Prediction(class_center,x_test,y_test):
     print(class_center.shape)
     now=datetime.datetime.now()
     print("Prediction begin: ",now)
     n_sampes = x_test.shape[0]
     y_pre = np.zeros(n_sampes,dtype=np.int32)
     for i in range(n_sampes):
-        s2 = np.power((class_center - x_test[i]),2)
-        s = np.sum(s2,axis=1)
-        y_pre[i] = np.argmin(s)
+        if (i+1) % 50 == 0:
+            print("%d samples finished, %d left,acc %f   %s"
+                  %(i,n_sampes-i,accuracy_score(y_pre[:i],y_test[:i]),datetime.datetime.now()))
+        # s2 = np.power((class_center - x_test[i]),2)
+        # s = np.sum(s2,axis=1)
+        # y_pre[i] = np.argmin(s)
+        y_pre[i] = cos_simi(class_center,x_test[i])
     last=datetime.datetime.now()
     print("Prediction finished!: ",last-now)
     return y_pre
-
 def test_compute():
     x=np.linspace(1,50,50).reshape((10,5))
     y=np.array([0,0,1,1,2,2,3,3,2,3])
@@ -73,20 +82,28 @@ def test_compute():
                        [10, 22, 31, 29, 37]])
     print('testing datas:', x_test)
     print('predicted labels:',Prediction(class_center,x_test))
-
+def test_cos():
+    c = np.array([[1,2,2,1],
+                  [1,2,3,3],
+                  [2, 1, 3, 3],])
+    v = np.array([1,2,3,1])
+    print(cos_simi(c,v))
 
 
 if __name__ == '__main__':
-    # x_train, x_test, y_train, y_test=\
-    #     Load_Traindata_Testdata_with_Tfidf('train_and_test_data_50000')
-    # class_center = Compute_Center_Each_Class(x_train,y_train,batch_size=10000)
-    # y_pre = Prediction(class_center,x_test.toarray()[:200])
-    # print("accuracy:",accuracy_score(y_true=y_test[:200],y_pred=y_pre))
+    x_train, x_test, y_train, y_test=\
+        Load_Traindata_Testdata_with_Tfidf('train_and_test_data_30000')
+    class_center = Compute_Center_Each_Class(x_train,y_train,batch_size=30000)
+    y_pre = Prediction(class_center,x_test.toarray(),y_test)
+    print("accuracy:",accuracy_score(y_true=y_test,y_pred=y_pre))
 
-    v1 = np.array([1,2,3,4])
-    v2 = np.array([1,1,2,2])
+
     # print(cos_simi(v1,v2))
     # test_compute()
+
+
+
+    # test_cos()
 
 
     # t=np.array([[0, 0, 0, 0, 0, 0.1, 0, 0, 0, 0.2, 0, 0, 0, 0, 0],

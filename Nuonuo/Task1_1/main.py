@@ -20,7 +20,6 @@ from sklearn.cluster import  KMeans
 def Load_Original_Traindata_Testdata_Cut_and_Save():
     now=datetime.datetime.now()
     print("Train and Test words Cut begin: ",now)
-
     train_label_data = pd.read_csv('./data/train_label.txt', names=['c1'])
     y_train = np.array(train_label_data['c1'])
     y_count = np.bincount(y_train)
