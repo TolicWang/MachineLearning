@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import re
 import pickle
+from xgboost import XGBClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import  accuracy_score
@@ -12,6 +13,8 @@ def check_contain_chinese(check_str):
          if u'\u4e00' <= ch <= u'\u9fff':
              return True
      return False
+
+
 
 def Load_Original_Traindata_Testdata_Cut_and_Save():
     now=datetime.datetime.now()
@@ -114,12 +117,56 @@ def train_by_RandForest():
     print("Training begin by RandForest:", now)
     model.fit(x_train,y_train)
     y_pre = model.predict(x_test)
+    print(model.get_params())
     print(model.score(x_test, y_test))
     print(accuracy_score(y_test, y_pre))
     training_time = datetime.datetime.now() - now
     print("Training time(s):", training_time)
 
-Load_Original_Traindata_Testdata_Cut_and_Save()
-Make_Train_and_Test_Tf_Idf_and_Save()
+def train_by_xgboost():
+    filename = 'train_and_test_data'
+    x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf(filename)
+    p = open('./data/indices', 'rb')
+    data = pickle.load(p)
+    indices = data['indices']
+    most_importance_feature = indices[:2000]
+    x_train = x_train[:,most_importance_feature]
+    x_test = x_test[:,most_importance_feature]
+    model = XGBClassifier(n_jobs=6,max_depth=300)
+    now = datetime.datetime.now()
+    print("Training begin by XGboost with shape:",x_train.shape, now)
+    model.fit(x_train, y_train)
+    y_pre = model.predict(x_test)
+    print(model.score(x_test, y_test))
+    print(accuracy_score(y_test, y_pre))
+    training_time = datetime.datetime.now() - now
+    print("Training time(s):", training_time)
+def train_by_partial_SGD(filename):
+
+    x_train, x_test, y_train, y_test = Load_Traindata_Testdata_with_Tfidf(filename)
+    model= SGDClassifier(n_jobs=4,loss='hinge',alpha=0.09,tol=0.001)
+    now = datetime.datetime.now()
+    print("Training begin by SGB:", now)
+    batch_size=50000
+    for i in range(1000):
+        last= datetime.datetime.now()
+        start=(i*batch_size)%len(y_train)
+        end=min(start+batch_size,len(y_train))
+        model.partial_fit(x_train[start:end],y_train[start:end],classes=y_train)
+        y_pre=model.predict(x_test)
+        acc=accuracy_score(y_test,y_pre)
+        score=model.score(x_test,y_test)
+        cost_time=datetime.datetime.now()-last
+        print("%d times,  %f score,  %f acc"%(i,score,acc),cost_time," time(s)")
+    # model.fit(X_train, Y_train)
+    # y_pre = model.predict(X_val)
+    # print(model.score(X_val, Y_val))
+    # print(accuracy_score(Y_val, y_pre))
+    training_time = datetime.datetime.now() - now
+    print("Training time(s):", training_time)
+
+# Load_Original_Traindata_Testdata_Cut_and_Save()
+# Make_Train_and_Test_Tf_Idf_and_Save()
 Feature_Section_by_RandForest()
-train_by_RandForest()
+# train_by_RandForest()
+# train_by_xgboost()

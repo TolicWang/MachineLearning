@@ -5,17 +5,17 @@ import jieba
 import re
 from collections import Counter
 def samples():
-    # train_label_data = pd.read_csv('./data/train_label.txt', names=['c1'])
-    test_data = pd.read_csv('./data/test_text.csv', names=['data', 'label'])
-    y_train= np.array(test_data['label'])
-    # y_train = np.array(train_label_data['c1'])
+    train_label_data = pd.read_csv('../data/train_label.txt', names=['c1'])
+    # test_data = pd.read_csv('./data/test_text.csv', names=['data', 'label'])
+    # y_train= np.array(test_data['label'])
+    y_train = np.array(train_label_data['c1'])
     print('样本总数：',len(y_train))
     x=np.unique(y_train)
     print('总类别：',x)
     print('总类别数',len(x))
     y=np.bincount(y_train)
     print('每个类的样本数：',y)
-    index = np.where(y<20)[0]
+    index = np.where(y<1)[0]
     index0=np.where(y==0)[0]
     print('样本次数小于n的类别数：',len(index)-len(index0))
     s=y.sum()
@@ -65,8 +65,9 @@ def words(dimensions):
     print('repeat rate:%f, when common words is %d:'%(repeat_len / len(test_words),dimensions))
 
 # for i in np.arange(100,5000,100,dtype=np.int32):
-words(5000)
+# words(5000)
 
+samples()
 # words(10)
 
 

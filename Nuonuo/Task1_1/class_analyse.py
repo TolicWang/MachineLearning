@@ -21,17 +21,8 @@ def samples():
     s=y.sum()
     count=0
     for i in index:
-        # s-=y[i]
         count+=y[i]
     print('样本次数小于n的个数%d,占比%f：'%(count,count/s))
-
-    #
-    # print(y_train)
-    #
-    # print(y)
-    # print(index)
-    #
-    #
 
 def words(dimensions):
     train_words=""

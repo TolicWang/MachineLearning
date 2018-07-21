@@ -1,0 +1,13 @@
+2000  n_estimator = 15  max_depth = 200  0.421    6 min
+2000  n_estimator = 15  max_depth = 250  0.436    8 min   n_job = 6
+2000  n_estimator = 15  max_depth = 300  0.445    8 min   n_job = 8
+2000  n_estimator = 15  max_depth = 350  0.450    8 min   n_job = 10
+2000  n_estimator = 15  max_depth = 450  0.457    9 min   n_job = 10
+1000  n_estimator = 15  max_depth = 450  0.452    8 min 46   n_job = 10
+1000  n_estimator = 15  max_depth = NONE  0.459    8 min 46   n_job = 8
+1100  n_estimator = 15  max_depth = NONE  0.459    8 min 46   n_job = 8
+4884  n_estimator = 12  max_depth = NONE  0.467    10 min 05   n_job = 10
+
+
+
+1000  n_estimator = 25  max_depth = 450  0.452    8 min 46   n_job = 10

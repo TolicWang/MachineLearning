@@ -92,7 +92,7 @@ def test_cos():
 
 if __name__ == '__main__':
     x_train, x_test, y_train, y_test=\
-        Load_Traindata_Testdata_with_Tfidf('train_and_test_data_30000')
+        Load_Traindata_Testdata_with_Tfidf('train_and_test_data')
     class_center = Compute_Center_Each_Class(x_train,y_train,batch_size=30000)
     y_pre = Prediction(class_center,x_test.toarray(),y_test)
     print("accuracy:",accuracy_score(y_true=y_test,y_pred=y_pre))
