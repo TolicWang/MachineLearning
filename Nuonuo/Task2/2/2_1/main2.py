@@ -125,7 +125,7 @@ def generate_batch(batch_size, num_skips, skip_window):
   batch = np.ndarray(shape=(batch_size), dtype=np.int32)
   labels = np.ndarray(shape=(batch_size, 1), dtype=np.int32)
   span = 2 * skip_window + 1  # [ skip_window target skip_window ]
-  buffer = collections.deque(maxlen=span)
+  buffer = collections.deque(maxlen=span)#建立一个队列
   # data_index是当前数据开始的位置
   # 产生batch后就往后推1位（产生batch）
   for _ in range(span):
@@ -135,7 +135,7 @@ def generate_batch(batch_size, num_skips, skip_window):
     # 利用buffer生成batch
     # buffer是一个长度为 2 * skip_window + 1长度的word list
     # 一个buffer生成num_skips个数的样本
-#     print([reverse_dictionary[i] for i in buffer])
+    print([reverse_dictionary[i] for i in buffer])
     target = skip_window  # target label at the center of the buffer
 #     targets_to_avoid保证样本不重复
     targets_to_avoid = [skip_window]
@@ -156,6 +156,9 @@ def generate_batch(batch_size, num_skips, skip_window):
 # 如连续的三个词['used', 'against', 'early']
 # 生成两个样本：against -> used, against -> early
 batch, labels = generate_batch(batch_size=8, num_skips=2, skip_window=1)
+
+
+
 for i in range(8):
   print(batch[i], reverse_dictionary[batch[i]],
         '->', labels[i, 0], reverse_dictionary[labels[i, 0]])
