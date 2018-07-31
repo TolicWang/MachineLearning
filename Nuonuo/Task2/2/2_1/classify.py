@@ -1,12 +1,12 @@
 import tensorflow as tf
 from sentence2word import Load_train_and_test_data
 from datetime import datetime
-INPUT_NODE = 128
+INPUT_NODE = 1024
 OUTPUT_NODE = 3510
-LEARNING_RATE = 0.7
+LEARNING_RATE = 0.5
 BATCH_SIZE = 300
 REGULARAZTION_RATE = 0.0001
-TRAINING_STEPS = 5000
+TRAINING_STEPS = 50000
 DATA_SIZE = 738793
 
 x_train,y_train,x_test,y_test = Load_train_and_test_data()
@@ -24,7 +24,7 @@ cross_entropy_mean = tf.reduce_mean(cross_entropy)
 
 regularization = tf.contrib.layers.l2_regularizer(REGULARAZTION_RATE)(weight)
 losses = cross_entropy_mean + regularization
-with tf.device('/cpu:0'):
+with tf.device('/gpu:0'):
     train_step = tf.train.GradientDescentOptimizer(LEARNING_RATE).minimize(loss=losses)
 
 with tf.Session(config=tf.ConfigProto(log_device_placement=True)) as sess:

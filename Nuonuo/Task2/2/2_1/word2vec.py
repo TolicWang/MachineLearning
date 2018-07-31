@@ -142,7 +142,7 @@ def generate_batch(data,batch_size, num_skips, skip_window):
 def train(data):
     # 第四步: 建立模型.
     batch_size = 128
-    embedding_size = 128  # 词嵌入空间是128维的。即word2vec中的vec是一个128维的向量
+    embedding_size = 1024  # 词嵌入空间是128维的。即word2vec中的vec是一个128维的向量
     skip_window = 1  # skip_window参数和之前保持一致
     num_skips = 2  # num_skips参数和之前保持一致
 
