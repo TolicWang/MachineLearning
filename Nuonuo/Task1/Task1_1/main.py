@@ -24,8 +24,6 @@ def Load_Original_Traindata_Testdata_Cut_and_Save():
     y_train = np.array(train_label_data['c1'])
     y_count = np.bincount(y_train)
     less_than_label = np.where(y_count <1)[0]
-    # print(less_than_label)
-    # remove samples which appear in a class less than 5 times
     line_number = 0
     count=0
     f=open('./data/train_cut_words.txt','w',encoding='utf-8')

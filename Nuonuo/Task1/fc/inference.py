@@ -1,6 +1,6 @@
 import tensorflow as tf
 INPUT_NODE = 1000
-OUTPUT_NODE = 3510
+OUTPUT_NODE = 3150
 LAYER1_NODE = 500
 
 def get_weight_variable(shape,regularizer):
